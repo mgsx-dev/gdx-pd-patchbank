@@ -1,0 +1,54 @@
+#N canvas 687 351 680 350 10;
+#X obj 46 169 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 5500 1;
+#X floatatom 43 189 5 0 0 0 - - -, f 5;
+#X floatatom 43 270 5 0 0 0 - - -, f 5;
+#X floatatom 69 207 5 0 0 0 - - -, f 5;
+#X floatatom 96 226 5 0 0 0 - - -, f 5;
+#X text 29 13 Linear interpolation (aka lerp);
+#X obj 43 248 lerp 3 7;
+#X floatatom 296 212 5 0 0 0 - - -, f 5;
+#X floatatom 340 213 5 0 0 0 - - -, f 5;
+#X obj 251 185 phasor~ 1;
+#X obj 253 263 osc~;
+#X obj 254 310 dac~;
+#X obj 254 285 *~;
+#X obj 328 270 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 252 235 lerp~ 400 800;
+#X floatatom 497 209 5 0 0 0 - - -, f 5;
+#X floatatom 541 210 5 0 0 0 - - -, f 5;
+#X obj 454 260 osc~;
+#X obj 455 307 dac~;
+#X obj 455 282 *~;
+#X obj 529 267 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 452 182 osc~ 1;
+#X obj 453 231 slerp~ 400 800;
+#X text 29 33 Interpolate from a to b \, first inlet is factor. second
+and third optional inlet are a et b values., f 50;
+#X text 45 132 Event version;
+#X text 31 77 lerp factor range from 0 to 1 while slerp (signed lerp)
+factor range from -1 to 1, f 85;
+#X text 342 131 Audio versions;
+#X connect 0 0 1 0;
+#X connect 1 0 6 0;
+#X connect 3 0 6 1;
+#X connect 4 0 6 2;
+#X connect 6 0 2 0;
+#X connect 7 0 14 1;
+#X connect 8 0 14 2;
+#X connect 9 0 14 0;
+#X connect 10 0 12 0;
+#X connect 12 0 11 0;
+#X connect 12 0 11 1;
+#X connect 13 0 12 1;
+#X connect 14 0 10 0;
+#X connect 15 0 22 1;
+#X connect 16 0 22 2;
+#X connect 17 0 19 0;
+#X connect 19 0 18 0;
+#X connect 19 0 18 1;
+#X connect 20 0 19 1;
+#X connect 21 0 22 0;
+#X connect 22 0 17 0;
