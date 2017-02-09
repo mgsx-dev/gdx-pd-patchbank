@@ -1,0 +1,28 @@
+#N canvas 616 338 450 300 10;
+#X obj 87 205 atom;
+#X obj 87 142 mtoa;
+#X obj 90 79 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 272 80 hsl 128 15 0 127 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 4100 1;
+#X obj 269 137 mtof;
+#X obj 269 201 ftom;
+#X floatatom 87 176 5 0 0 0 - - -, f 5;
+#X floatatom 269 172 5 0 0 0 - - -, f 5;
+#X floatatom 269 231 5 0 0 0 - - -, f 5;
+#X floatatom 87 234 5 0 0 0 - - -, f 5;
+#X floatatom 87 113 5 0 0 0 - - -, f 5;
+#X floatatom 269 109 5 0 0 0 - - -, f 5;
+#X text 16 11 Convert from midi 7-bit integer value to/from audio values
+: like mtof/ftom \, mtoa/atom convert midi velocity (0-127) to/from
+audio amplitude (0-1)., f 57;
+#X connect 0 0 9 0;
+#X connect 1 0 6 0;
+#X connect 2 0 10 0;
+#X connect 3 0 11 0;
+#X connect 4 0 7 0;
+#X connect 5 0 8 0;
+#X connect 6 0 0 0;
+#X connect 7 0 5 0;
+#X connect 10 0 1 0;
+#X connect 11 0 4 0;
