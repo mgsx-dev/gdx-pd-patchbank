@@ -1,3 +1,7 @@
+# Eclipse
 /.project
+/.settings/
+
+# Gradle
 /.gradle
 /build/
