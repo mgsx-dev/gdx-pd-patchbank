@@ -14,10 +14,16 @@ task patchZip(type: Zip) {
     from files('lib')
 }
 
+task patchDoc(type: Zip) {
+	classifier = 'javadoc'
+    from files('doc')
+}
+
 publishing {
     publications {
         maven(MavenPublication) {
 			artifact patchZip
+			artifact patchDoc
         }
     }
 }
