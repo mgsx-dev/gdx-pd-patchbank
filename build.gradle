@@ -14,7 +14,7 @@ task patchZip(type: Zip) {
     from files('lib')
 }
 
-task patchDoc(type: Zip) {
+task patchDoc(type: Jar) {
 	classifier = 'javadoc'
     from files('doc')
 }
