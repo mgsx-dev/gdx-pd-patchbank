@@ -24,7 +24,7 @@ task patchZip(type: Zip) {
 
 task patchDoc(type: Jar) {
 	classifier = 'javadoc'
-    from files('doc')
+    from files("$buildDir/doc/html")
 }
 
 publishing {
@@ -95,3 +95,5 @@ markdownToHtml.dependsOn += prepareMarkdowns
 task genHtml(dependsOn: [markdownToHtml, patchesToSVG]){
 	
 }
+
+patchDoc.dependsOn += genHtml
