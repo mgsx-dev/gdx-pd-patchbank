@@ -1,11 +1,16 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" } 
     }
+    dependencies {
+    	classpath "com.moowork.gradle:gradle-node-plugin:1.1.1"
+  	}
 }
 
 apply plugin: 'base'
 apply plugin: 'maven-publish'
+apply plugin: 'com.moowork.node'
 
 group = 'net.mgsx.pd'
 version = '0.1.0-SNAPSHOT'
@@ -27,3 +32,26 @@ publishing {
         }
     }
 }
+
+task installPdFileUtils(type: NpmTask) {
+  // install the express package only
+  args = ['install', 'pd-fileutils', '--save-dev']
+}
+
+
+task patchesToSVG() {}
+
+patchesToSVG.dependsOn += installPdFileUtils
+
+fileTree('lib').include('**/*-help.pd').each {File f ->
+    def absName = f.name.take(f.name.lastIndexOf('.'))
+	task "patchToSVG${absName}"(type: NodeTask) {
+	  script = file('node_modules/pd-fileutils/bin/pd-fileutils')
+	  args = [f.path]
+	  execOverrides {
+	     it.standardOutput = new FileOutputStream("$buildDir/${absName}.svg")
+	  }
+   } 
+   patchesToSVG.dependsOn "patchToSVG${absName}"	
+}
+
