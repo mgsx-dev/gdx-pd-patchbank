@@ -70,7 +70,8 @@ task genIndexMd(){
 		file("$buildDir/doc/md").mkdirs()
 		def myFile = file("$buildDir/doc/md/index.md")
 		myFile.delete()
-	 	def content = "All patches : \n\n"
+		def header = file("doc/index.md").text
+	 	def content = "\n\n"
 		fileTree('lib').include('**/*-help.pd').each {File f ->
 			def absName = f.name.take(f.name.lastIndexOf('.'))
 			content += "* [${f.name}](${absName}.md)\n"
@@ -79,7 +80,7 @@ task genIndexMd(){
 			indexFile.delete()
 			indexFile << "![${absName} image](${absName}.svg)"
 		}
-		myFile << content
+		myFile << header + content
 	}
 }
 
@@ -89,6 +90,8 @@ task prepareMarkdowns(type: Copy, dependsOn: genIndexMd){
 	include "*.md"
 }
 
-task genHtml(dependsOn: [prepareMarkdowns, markdownToHtml, patchesToSVG]){
+markdownToHtml.dependsOn += prepareMarkdowns
+
+task genHtml(dependsOn: [markdownToHtml, patchesToSVG]){
 	
 }
