@@ -2,15 +2,18 @@ buildscript {
     repositories {
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" } 
+        maven { url 'http://dl.bintray.com/content/aalmiray/kordamp' }
     }
     dependencies {
     	classpath "com.moowork.gradle:gradle-node-plugin:1.1.1"
+    	classpath 'org.kordamp:markdown-gradle-plugin:1.0.0'
   	}
 }
 
 apply plugin: 'base'
 apply plugin: 'maven-publish'
 apply plugin: 'com.moowork.node'
+apply plugin: 'org.kordamp.markdown.convert'
 
 group = 'net.mgsx.pd'
 version = '0.1.0-SNAPSHOT'
@@ -43,15 +46,49 @@ task patchesToSVG() {}
 
 patchesToSVG.dependsOn += installPdFileUtils
 
+// https://github.com/sebpiq/pd-fileutils
 fileTree('lib').include('**/*-help.pd').each {File f ->
     def absName = f.name.take(f.name.lastIndexOf('.'))
 	task "patchToSVG${absName}"(type: NodeTask) {
 	  script = file('node_modules/pd-fileutils/bin/pd-fileutils')
 	  args = [f.path]
 	  execOverrides {
-	     it.standardOutput = new FileOutputStream("$buildDir/${absName}.svg")
+	     it.standardOutput = new FileOutputStream("$buildDir/doc/html/${absName}.svg")
 	  }
    } 
    patchesToSVG.dependsOn "patchToSVG${absName}"	
 }
 
+// https://github.com/aalmiray/markdown-gradle-plugin
+markdownToHtml{
+	sourceDir = file("$buildDir/doc/md")
+	outputDir = file("$buildDir/doc/html")
+}
+
+task genIndexMd(){
+	doLast{
+		file("$buildDir/doc/md").mkdirs()
+		def myFile = file("$buildDir/doc/md/index.md")
+		myFile.delete()
+	 	def content = "All patches : \n\n"
+		fileTree('lib').include('**/*-help.pd').each {File f ->
+			def absName = f.name.take(f.name.lastIndexOf('.'))
+			content += "* [${f.name}](${absName}.md)\n"
+			
+			def indexFile = file("$buildDir/doc/md/${absName}.md")
+			indexFile.delete()
+			indexFile << "![${absName} image](${absName}.svg)"
+		}
+		myFile << content
+	}
+}
+
+task prepareMarkdowns(type: Copy, dependsOn: genIndexMd){
+	from('lib')
+	into("$buildDir/doc/md")
+	include "*.md"
+}
+
+task genHtml(dependsOn: [prepareMarkdowns, markdownToHtml, patchesToSVG]){
+	
+}
