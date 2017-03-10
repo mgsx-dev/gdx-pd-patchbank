@@ -15,14 +15,30 @@ apply plugin: 'maven-publish'
 apply plugin: 'com.moowork.node'
 apply plugin: 'org.kordamp.markdown.convert'
 
+node {
+    version = '6.10.0'
+    npmVersion = '3.10.10'
+    distBaseUrl = 'https://nodejs.org/dist'
+    download = true
+    workDir = file("$buildDir/nodejs")
+    nodeModulesDir = file("$buildDir/node_modules")
+    if (!nodeModulesDir.isDirectory()) {
+        nodeModulesDir.mkdirs()
+    }
+}
+
 group = 'net.mgsx.pd'
 version = '0.1.0-SNAPSHOT'
 
 task patchZip(type: Zip) {
+	group = "build"
+  	description = "Package Pd patches"
     from files('lib')
 }
 
 task patchDoc(type: Jar) {
+	group = "documentation"
+  	description = "Package documentation"
 	classifier = 'javadoc'
     from files("$buildDir/doc/html")
 }
@@ -37,20 +53,26 @@ publishing {
 }
 
 task installPdFileUtils(type: NpmTask) {
-  // install the express package only
+  group = "node"
+  description = "Install pd-fileutils"
   args = ['install', 'pd-fileutils', '--save-dev']
 }
 
 
-task patchesToSVG() {}
+task patchesToSVG() {
+	group = "documentation SVG"
+	description = "Generate all patches as SVG"
+}
 
 patchesToSVG.dependsOn += installPdFileUtils
 
 // https://github.com/sebpiq/pd-fileutils
 fileTree('lib').include('**/*-help.pd').each {File f ->
     def absName = f.name.take(f.name.lastIndexOf('.'))
-	task "patchToSVG${absName}"(type: NodeTask) {
-	  script = file('node_modules/pd-fileutils/bin/pd-fileutils')
+	task "patchToSVG${absName}"(type: NodeTask, dependsOn: installPdFileUtils) {
+	  group = "documentation SVG"
+	  description = "Generate patch as SVG"
+	  script = file("$node.nodeModulesDir/pd-fileutils/bin/pd-fileutils")
 	  args = [f.path]
 	  execOverrides {
 	     it.standardOutput = new FileOutputStream("$buildDir/doc/html/${absName}.svg")
@@ -66,6 +88,8 @@ markdownToHtml{
 }
 
 task genIndexMd(){
+	group = "documentation"
+	description = "Generate markdown index and default patch markdown"
 	doLast{
 		file("$buildDir/doc/md").mkdirs()
 		def myFile = file("$buildDir/doc/md/index.md")
@@ -85,6 +109,8 @@ task genIndexMd(){
 }
 
 task prepareMarkdowns(type: Copy, dependsOn: genIndexMd){
+	group = "documentation"
+	description = "Collect markdown files"
 	from('lib')
 	into("$buildDir/doc/md")
 	include "*.md"
@@ -93,7 +119,8 @@ task prepareMarkdowns(type: Copy, dependsOn: genIndexMd){
 markdownToHtml.dependsOn += prepareMarkdowns
 
 task genHtml(dependsOn: [markdownToHtml, patchesToSVG]){
-	
+	group = "documentation"
+	description = "Generate HTML documentation"
 }
 
 patchDoc.dependsOn += genHtml
