@@ -11,7 +11,7 @@ buildscript {
 }
 
 project.ext {
-	
+	htmlDocDir = file("$buildDir/doc/html")
 }
 
 apply from: 'doc.gradle'
@@ -33,7 +33,7 @@ task patchDoc(type: Jar, dependsOn: genHtml) {
 	group = "documentation"
   	description = "Package documentation"
 	classifier = 'javadoc'
-    from files("$buildDir/doc/html")
+    from files(htmlDocDir)
 }
 
 publishing {

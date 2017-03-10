@@ -2,11 +2,15 @@ apply from: 'svg.gradle'
 
 apply plugin: 'org.kordamp.markdown.convert'
 
+project.ext {
+	mdDocDir = file("$buildDir/doc/md")
+}
+
 
 // https://github.com/aalmiray/markdown-gradle-plugin
 markdownToHtml{
-	sourceDir = file("$buildDir/doc/md")
-	outputDir = file("$buildDir/doc/html")
+	sourceDir = mdDocDir
+	outputDir = htmlDocDir
 }
 
 task genIndexMd(){
@@ -14,7 +18,7 @@ task genIndexMd(){
 	description = "Generate markdown index and default patch markdown"
 	doLast{
 		markdownToHtml.sourceDir.mkdirs()
-		def myFile = file("$markdownToHtml.sourceDir/index.md")
+		def myFile = file("$mdDocDir/index.md")
 		myFile.delete()
 		def header = file("doc/index.md").text
 	 	def content = "\n\n"
@@ -22,7 +26,7 @@ task genIndexMd(){
 			def absName = f.name.take(f.name.lastIndexOf('.'))
 			content += "* [${f.name}](${absName}.md)\n"
 			
-			def indexFile = file("$markdownToHtml.sourceDir/${absName}.md")
+			def indexFile = file("$mdDocDir/${absName}.md")
 			indexFile.delete()
 			indexFile << "![${absName} image](${absName}.svg)"
 		}
@@ -34,7 +38,7 @@ task prepareMarkdowns(type: Copy, dependsOn: genIndexMd){
 	group = "documentation"
 	description = "Collect markdown files"
 	from('lib')
-	into(markdownToHtml.sourceDir)
+	into(mdDocDir)
 	include "*.md"
 }
 

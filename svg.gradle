@@ -35,7 +35,7 @@ fileTree('lib').include('**/*-help.pd').each {File f ->
 	  script = file("$node.nodeModulesDir/pd-fileutils/bin/pd-fileutils")
 	  args = [f.path]
 	  execOverrides {
-	     it.standardOutput = new FileOutputStream("$markdownToHtml.outputDir/${absName}.svg")
+	     it.standardOutput = new FileOutputStream("$htmlDocDir/${absName}.svg")
 	  }
    } 
    patchesToSVG.dependsOn "patchToSVG${absName}"	
