@@ -1,0 +1,11 @@
+#N canvas 620 253 274 192 10;
+#X obj 53 13 hsl 128 15 -1 2 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X floatatom 50 133 5 0 0 0 - - -, f 5;
+#X msg 110 75 0 -47 100 23 56 12 17;
+#X obj 50 111 lerp-list;
+#X obj 110 49 loadbang;
+#X connect 0 0 3 0;
+#X connect 2 0 3 1;
+#X connect 3 0 1 0;
+#X connect 4 0 2 0;
