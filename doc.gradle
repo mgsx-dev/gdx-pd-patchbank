@@ -6,45 +6,79 @@ project.ext {
 	mdDocDir = file("$buildDir/doc/md")
 }
 
-
 // https://github.com/aalmiray/markdown-gradle-plugin
 markdownToHtml{
 	sourceDir = mdDocDir
 	outputDir = htmlDocDir
+	configuration.tables = true
 }
 
-task genIndexMd(){
+task copyStaticDoc(type: Copy){
 	group = "documentation"
-	description = "Generate markdown index and default patch markdown"
-	doLast{
-		markdownToHtml.sourceDir.mkdirs()
-		def myFile = file("$mdDocDir/index.md")
-		myFile.delete()
-		def header = file("doc/index.md").text
-	 	def content = "\n\n"
-		fileTree('lib').include('**/*-help.pd').each {File f ->
-			def absName = f.name.take(f.name.lastIndexOf('.'))
-			content += "* [${f.name}](${absName}.md)\n"
-			
-			def indexFile = file("$mdDocDir/${absName}.md")
-			indexFile.delete()
-			indexFile << "![${absName} image](${absName}.svg)"
-		}
-		myFile << header + content
-	}
-}
-
-task prepareMarkdowns(type: Copy, dependsOn: genIndexMd){
-	group = "documentation"
-	description = "Collect markdown files"
-	from('lib')
+	description = "Collect static markdown files"
+	from('doc')
 	into(mdDocDir)
 	include "*.md"
 }
 
-markdownToHtml.dependsOn += prepareMarkdowns
+task genMdPatches() {
+	group = "documentation"
+	description = "Generate default markdown page for individual patch"
+	doLast{
+		file("$mdDocDir/lib").mkdirs()
+		pdPatches.each {File f ->
+			def absName = f.name.take(f.name.lastIndexOf('.'))
+			def indexFile = file("$mdDocDir/lib/${absName}.md")
+			indexFile.delete()
+			indexFile << "![${absName} image](${absName}.svg)"
+		}
+	}
+}
 
-task genHtml(dependsOn: [markdownToHtml, patchesToSVG]){
+task assembleMdPatches(type: Copy, dependsOn: genMdPatches){
+	group = "documentation"
+	description = "Collect static markdown files (override generated md files)"
+	from('lib')
+	into("$mdDocDir/lib")
+	include "*.md"
+}
+
+task genIndexMd(dependsOn: copyStaticDoc){
+	group = "documentation"
+	description = "Generate markdown index (splitted version and default patch markdown)"
+	doLast{
+	 	def content = "\nIndex :\n\n"
+		fileTree('lib').include('**/*.pd').exclude('**/*-help.pd').sort().each {File f ->
+			def absName = f.name.take(f.name.lastIndexOf('.'))
+			content += "* **${absName}** :\n"
+			if(file("${f.parent}/${absName}-help.pd").exists()){
+				content += "    * [${absName}-help.pd](lib/${absName}-help.md)\n"
+			}
+			content += "    * [${absName}.pd](lib/${absName}.md)\n"
+		}
+		file("$mdDocDir/index.md") << content
+	}
+}
+
+task genIndexMdFull(dependsOn: genMdPatches) {
+	group = "documentation"
+	description = "Generate markdown index (full version with all patches)"
+	doLast{
+		def myFile = file("$mdDocDir/lib/index-full.md")
+		myFile.delete()
+	 	def content = "# Patch Bank\n\n"
+	 	fileTree("$mdDocDir/lib"){include('*.md')}.sort().each{ File f ->
+	 		def absName = f.name.take(f.name.lastIndexOf('.'))
+	 		content += "## ${absName}\n"
+	 		content += "${f.text}\n"
+	 	}
+		myFile << content
+	}
+}
+
+markdownToHtml.dependsOn += [assembleMdPatches, copyStaticDoc]
+
+task genHtml(dependsOn: [markdownToHtml, patchesToSVG, genIndexMdFull, genIndexMd]){
 	group = "documentation"
 	description = "Generate HTML documentation"
 }

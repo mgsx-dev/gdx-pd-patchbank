@@ -1,8 +1,6 @@
 
 # Gdx Pd Patchbank Documentation
 
-## TODOC summary
+TODOC summary
 
-## Abstrations
-
-All patch help file (HTML/SVG format) :
+[Full version](lib/index-full.md)

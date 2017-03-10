@@ -12,6 +12,7 @@ buildscript {
 
 project.ext {
 	htmlDocDir = file("$buildDir/doc/html")
+	pdPatches = fileTree('lib').include('**/*.pd').sort()
 }
 
 apply from: 'doc.gradle'
@@ -26,7 +27,7 @@ version = '0.1.0-SNAPSHOT'
 task patchZip(type: Zip) {
 	group = "build"
   	description = "Package Pd patches"
-    from files('lib')
+    from pdPatches
 }
 
 task patchDoc(type: Jar, dependsOn: genHtml) {

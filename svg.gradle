@@ -1,3 +1,6 @@
+/**
+ * This sub build script generates SVG for all $pdPatches to $htmlDocDir
+ */
 apply plugin: 'com.moowork.node'
 
 node {
@@ -19,15 +22,13 @@ task installPdFileUtils(type: NpmTask) {
 }
 
 
-task patchesToSVG() {
+task patchesToSVG(dependsOn: installPdFileUtils) {
 	group = "documentation SVG"
 	description = "Generate all patches as SVG"
 }
 
-patchesToSVG.dependsOn += installPdFileUtils
-
 // https://github.com/sebpiq/pd-fileutils
-fileTree('lib').include('**/*-help.pd').each {File f ->
+pdPatches.each {File f ->
     def absName = f.name.take(f.name.lastIndexOf('.'))
 	task "patchToSVG${absName}"(type: NodeTask, dependsOn: installPdFileUtils) {
 	  group = "documentation SVG"
@@ -35,7 +36,7 @@ fileTree('lib').include('**/*-help.pd').each {File f ->
 	  script = file("$node.nodeModulesDir/pd-fileutils/bin/pd-fileutils")
 	  args = [f.path]
 	  execOverrides {
-	     it.standardOutput = new FileOutputStream("$htmlDocDir/${absName}.svg")
+	     it.standardOutput = new FileOutputStream("$htmlDocDir/lib/${absName}.svg")
 	  }
    } 
    patchesToSVG.dependsOn "patchToSVG${absName}"	
