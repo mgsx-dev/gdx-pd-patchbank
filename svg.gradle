@@ -1,0 +1,42 @@
+apply plugin: 'com.moowork.node'
+
+node {
+    version = '6.10.0'
+    npmVersion = '3.10.10'
+    distBaseUrl = 'https://nodejs.org/dist'
+    download = true
+    workDir = file("$buildDir/nodejs")
+    nodeModulesDir = file("$buildDir/node_modules")
+    if (!nodeModulesDir.isDirectory()) {
+        nodeModulesDir.mkdirs()
+    }
+}
+
+task installPdFileUtils(type: NpmTask) {
+  group = "node"
+  description = "Install pd-fileutils"
+  args = ['install', 'pd-fileutils', '--save-dev']
+}
+
+
+task patchesToSVG() {
+	group = "documentation SVG"
+	description = "Generate all patches as SVG"
+}
+
+patchesToSVG.dependsOn += installPdFileUtils
+
+// https://github.com/sebpiq/pd-fileutils
+fileTree('lib').include('**/*-help.pd').each {File f ->
+    def absName = f.name.take(f.name.lastIndexOf('.'))
+	task "patchToSVG${absName}"(type: NodeTask, dependsOn: installPdFileUtils) {
+	  group = "documentation SVG"
+	  description = "Generate patch as SVG"
+	  script = file("$node.nodeModulesDir/pd-fileutils/bin/pd-fileutils")
+	  args = [f.path]
+	  execOverrides {
+	     it.standardOutput = new FileOutputStream("$markdownToHtml.outputDir/${absName}.svg")
+	  }
+   } 
+   patchesToSVG.dependsOn "patchToSVG${absName}"	
+}

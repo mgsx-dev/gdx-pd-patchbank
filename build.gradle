@@ -5,27 +5,20 @@ buildscript {
         maven { url 'http://dl.bintray.com/content/aalmiray/kordamp' }
     }
     dependencies {
-    	classpath "com.moowork.gradle:gradle-node-plugin:1.1.1"
     	classpath 'org.kordamp:markdown-gradle-plugin:1.0.0'
+    	classpath "com.moowork.gradle:gradle-node-plugin:1.1.1"
   	}
 }
 
+project.ext {
+	
+}
+
+apply from: 'doc.gradle'
+
 apply plugin: 'base'
 apply plugin: 'maven-publish'
-apply plugin: 'com.moowork.node'
-apply plugin: 'org.kordamp.markdown.convert'
 
-node {
-    version = '6.10.0'
-    npmVersion = '3.10.10'
-    distBaseUrl = 'https://nodejs.org/dist'
-    download = true
-    workDir = file("$buildDir/nodejs")
-    nodeModulesDir = file("$buildDir/node_modules")
-    if (!nodeModulesDir.isDirectory()) {
-        nodeModulesDir.mkdirs()
-    }
-}
 
 group = 'net.mgsx.pd'
 version = '0.1.0-SNAPSHOT'
@@ -36,7 +29,7 @@ task patchZip(type: Zip) {
     from files('lib')
 }
 
-task patchDoc(type: Jar) {
+task patchDoc(type: Jar, dependsOn: genHtml) {
 	group = "documentation"
   	description = "Package documentation"
 	classifier = 'javadoc'
@@ -51,76 +44,3 @@ publishing {
         }
     }
 }
-
-task installPdFileUtils(type: NpmTask) {
-  group = "node"
-  description = "Install pd-fileutils"
-  args = ['install', 'pd-fileutils', '--save-dev']
-}
-
-
-task patchesToSVG() {
-	group = "documentation SVG"
-	description = "Generate all patches as SVG"
-}
-
-patchesToSVG.dependsOn += installPdFileUtils
-
-// https://github.com/sebpiq/pd-fileutils
-fileTree('lib').include('**/*-help.pd').each {File f ->
-    def absName = f.name.take(f.name.lastIndexOf('.'))
-	task "patchToSVG${absName}"(type: NodeTask, dependsOn: installPdFileUtils) {
-	  group = "documentation SVG"
-	  description = "Generate patch as SVG"
-	  script = file("$node.nodeModulesDir/pd-fileutils/bin/pd-fileutils")
-	  args = [f.path]
-	  execOverrides {
-	     it.standardOutput = new FileOutputStream("$buildDir/doc/html/${absName}.svg")
-	  }
-   } 
-   patchesToSVG.dependsOn "patchToSVG${absName}"	
-}
-
-// https://github.com/aalmiray/markdown-gradle-plugin
-markdownToHtml{
-	sourceDir = file("$buildDir/doc/md")
-	outputDir = file("$buildDir/doc/html")
-}
-
-task genIndexMd(){
-	group = "documentation"
-	description = "Generate markdown index and default patch markdown"
-	doLast{
-		file("$buildDir/doc/md").mkdirs()
-		def myFile = file("$buildDir/doc/md/index.md")
-		myFile.delete()
-		def header = file("doc/index.md").text
-	 	def content = "\n\n"
-		fileTree('lib').include('**/*-help.pd').each {File f ->
-			def absName = f.name.take(f.name.lastIndexOf('.'))
-			content += "* [${f.name}](${absName}.md)\n"
-			
-			def indexFile = file("$buildDir/doc/md/${absName}.md")
-			indexFile.delete()
-			indexFile << "![${absName} image](${absName}.svg)"
-		}
-		myFile << header + content
-	}
-}
-
-task prepareMarkdowns(type: Copy, dependsOn: genIndexMd){
-	group = "documentation"
-	description = "Collect markdown files"
-	from('lib')
-	into("$buildDir/doc/md")
-	include "*.md"
-}
-
-markdownToHtml.dependsOn += prepareMarkdowns
-
-task genHtml(dependsOn: [markdownToHtml, patchesToSVG]){
-	group = "documentation"
-	description = "Generate HTML documentation"
-}
-
-patchDoc.dependsOn += genHtml
