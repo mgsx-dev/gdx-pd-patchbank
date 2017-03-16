@@ -43,3 +43,9 @@ publishing {
         }
     }
 }
+
+task runPd(type:Exec, group: "pd", description: "Run Puredata with libs path") {  
+	workingDir  "lib"   
+    executable = "pd" 
+    args = ["-noprefs", "-path", "libs/rjlib"]
+} 
