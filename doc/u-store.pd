@@ -1,0 +1,16 @@
+#N canvas 337 275 646 300 10;
+#X obj 155 31 loadbang;
+#X obj 183 120 s \$1-\$2;
+#X obj 155 81 f \$3;
+#X obj 182 157 r \$1-\$2;
+#X obj 135 236 send storage;
+#X obj 138 178 f;
+#X obj 138 200 list prepend \$1-\$2;
+#X obj 64 125 r g-store;
+#X connect 0 0 2 0;
+#X connect 2 0 1 0;
+#X connect 2 0 5 1;
+#X connect 3 0 5 1;
+#X connect 5 0 6 0;
+#X connect 6 0 4 0;
+#X connect 7 0 5 0;

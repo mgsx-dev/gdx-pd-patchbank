@@ -1,0 +1,58 @@
+#N canvas 300 288 1267 649 10;
+#X obj 49 402 e-overdrive-m od1 2;
+#X obj 543 225 u-storage;
+#X msg 652 25 save preset1.txt;
+#X msg 652 75 load preset1.txt;
+#X msg 652 100 load preset2.txt;
+#X msg 652 50 save preset2.txt;
+#X msg 651 151 dump;
+#X msg 543 252 od2-gain 6.05488 \, od1-gain 2.0937 \, od1-gain 2.0937
+;
+#X msg 651 190 od2-gain 6.62181 \, od1-gain 2.63772;
+#X text 53 30 USE CASE : I want auto save support \, no connections
+required and save/load to/from Pd or LibPD too. Text files are OK.
+But sometimes I want to save other things than float : symbol \, list
+\, arrays .... Lot of time I want to resuse abstractions : have twice
+the same but I want different presets !;
+#X obj 198 402 e-overdrive-m od2 3;
+#X obj 543 289 r od1-gain;
+#X floatatom 543 311 5 0 0 0 - - -, f 5;
+#X floatatom 543 359 5 0 0 0 - - -, f 5;
+#X obj 543 337 r od2-gain;
+#X text 799 59 <- I can load/save from/to specific preset file.;
+#X text 913 190 <- and reuse it to recall preset.;
+#X text 913 254 <- preset is dumped here.;
+#X text 656 338 <- gain for my overdrive 2 can be received by its name.
+;
+#X floatatom 543 405 5 0 0 0 - - -, f 5;
+#X obj 543 425 s od1-gain;
+#X floatatom 543 456 5 0 0 0 - - -, f 5;
+#X obj 543 476 s od2-gain;
+#X text 657 297 <- gain for my overdrive 1 can be received by its name.
+;
+#X text 659 445 <- gains for my overdrives can be controlled like this.
+;
+#X obj 514 538 hsl 128 15 1 10 0 0 od1-gain od1-gain empty -2 -8 0
+10 -262144 -1 -1 12700 1;
+#X obj 446 577 c-hsl od1-gain 2 5;
+#X text 658 586 <- or with a controller from 2 to 5;
+#X text 660 540 <- or with a slider from 1 to 10;
+#X text 798 146 <- I can just dump preset to a message.;
+#X text 268 226 This is the main piece for storage ->;
+#X obj 137 491 dac~;
+#X obj 142 290 osc~ 50;
+#X connect 0 0 31 0;
+#X connect 1 0 7 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;
+#X connect 4 0 1 0;
+#X connect 5 0 1 0;
+#X connect 6 0 1 0;
+#X connect 8 0 1 0;
+#X connect 10 0 31 1;
+#X connect 11 0 12 0;
+#X connect 14 0 13 0;
+#X connect 19 0 20 0;
+#X connect 21 0 22 0;
+#X connect 32 0 0 0;
+#X connect 32 0 10 0;

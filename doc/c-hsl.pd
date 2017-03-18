@@ -1,0 +1,18 @@
+#N canvas 65 137 450 414 10;
+#X obj 168 115 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#X obj 147 204 s \$1;
+#X obj 137 19 r \$1;
+#X msg 137 41 set \$1;
+#X obj 259 5 loadbang;
+#X obj 259 27 list \$2 \$3;
+#X obj 259 49 list prepend range;
+#X obj 259 71 list trim;
+#X connect 0 0 1 0;
+#X connect 2 0 3 0;
+#X connect 3 0 0 0;
+#X connect 4 0 5 0;
+#X connect 5 0 6 0;
+#X connect 6 0 7 0;
+#X connect 7 0 0 0;
+#X coords 0 -1 1 1 200 32 1 100 100;

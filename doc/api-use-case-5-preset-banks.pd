@@ -1,0 +1,2 @@
+#N canvas 65 81 450 300 10;
+#X obj 87 161 u-bank bank1 presets/bank1;

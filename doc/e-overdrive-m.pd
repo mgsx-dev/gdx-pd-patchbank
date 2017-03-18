@@ -1,0 +1,12 @@
+#N canvas 511 446 450 300 10;
+#X obj 74 43 inlet~;
+#X obj 76 135 clip~ -1 1;
+#X obj 76 180 outlet~;
+#X obj 100 72 r \$1-gain;
+#X obj 75 102 *~ 3;
+#X obj 269 107 u-store \$1 gain \$2;
+#X obj 268 62 # u-init \$1 gain \$2;
+#X connect 0 0 4 0;
+#X connect 1 0 2 0;
+#X connect 3 0 4 1;
+#X connect 4 0 1 0;

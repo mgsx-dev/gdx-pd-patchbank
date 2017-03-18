@@ -1,0 +1,24 @@
+#N canvas 491 529 638 300 10;
+#X obj 209 53 * 6.283;
+#X floatatom 156 111 12 0 0 0 - - -, f 12;
+#X floatatom 294 124 12 0 0 0 - - -, f 12;
+#X obj 212 21 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 0 1;
+#N canvas 117 422 450 300 card-array1-template 0;
+#X obj 32 26 struct card-array1-template float x float y;
+#X restore 398 245 pd card-array1-template;
+#N canvas 1089 422 450 300 card-template 0;
+#X obj 22 145 filledpolygon 509 509 0 -10 -10 10 -10 10 10 -10 10;
+#X obj 23 30 plot curve array1 9 1 120 50 20;
+#X obj 24 76 struct card-template float x float y array array1 card-array1-template
+;
+#X restore 396 211 pd card-template;
+#X obj 449 74 plot;
+#N canvas 65 113 450 300 card-data 0;
+#X restore 395 168 pd card-data;
+#X obj 209 78 u-cardioid 1;
+#X connect 0 0 8 0;
+#X connect 3 0 0 0;
+#X connect 3 0 6 0;
+#X connect 8 0 1 0;
+#X connect 8 1 2 0;

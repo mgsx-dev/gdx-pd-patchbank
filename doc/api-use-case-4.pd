@@ -1,0 +1,31 @@
+#N canvas 297 355 595 427 10;
+#X text 17 11 USE CASE : Sequencers get timing through a clock;
+#X text 19 34 * can be procedural clock (aka metro);
+#X text 19 54 * can be external midi clock;
+#X text 19 74 * can be a manual clock (beat tap);
+#X msg 89 225 start;
+#X msg 147 225 stop;
+#X obj 118 271 u-clock clock1 200;
+#X obj 118 376 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 172 375 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 227 375 5 0 0 0 - - -, f 5;
+#X msg 202 225 pause;
+#X msg 259 225 resume;
+#X obj 407 238 poly;
+#X text 407 262 TODO : poly clear !;
+#X text 14 117 API : a clock send standard messages : position in midi
+ticks (96 per note : 24 per quarter note). 4 special messages are "start"
+\, "stop" \, "pause" \, "resume". Stop message is propagated to output
+in order to inform subsequent nodes eg. generator (compatible with
+poly);
+#X obj 118 316 route stop clear;
+#X connect 4 0 6 0;
+#X connect 5 0 6 0;
+#X connect 6 0 15 0;
+#X connect 10 0 6 0;
+#X connect 11 0 6 0;
+#X connect 15 0 7 0;
+#X connect 15 1 8 0;
+#X connect 15 2 9 0;
