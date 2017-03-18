@@ -1,0 +1,9 @@
+#N canvas 622 535 450 300 10;
+#X obj 152 28 inlet bpm;
+#X obj 152 161 outlet ms;
+#X obj 152 75 swap 60000;
+#X obj 152 124 /;
+#X connect 0 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 1 3 1;
+#X connect 3 0 1 0;

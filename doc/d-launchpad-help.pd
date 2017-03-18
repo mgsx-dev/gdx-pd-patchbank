@@ -1,0 +1,14 @@
+#N canvas 916 618 813 300 10;
+#X obj 355 160 print control;
+#X text 44 19 DEVICE : Ableton Launchpad;
+#X text 462 161 <- control name (button release are filtered);
+#X obj 211 221 i-example-m;
+#X obj 211 263 dac~;
+#X obj 211 103 d-launchpad lp guitar;
+#X text 7 119 events depends on <mode> ->;
+#X text 375 104 <- <name> <mode> : mode can be raw \, grid or guitar.
+, f 53;
+#X connect 3 0 4 0;
+#X connect 3 0 4 1;
+#X connect 5 0 3 0;
+#X connect 5 1 0 0;

@@ -1,0 +1,20 @@
+#N canvas 398 337 494 445 10;
+#X text 46 20 API : DEVICE (d-<name>-<type>);
+#X obj 37 328 i-example-m;
+#X obj 37 370 dac~;
+#X obj 37 267 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 46 40 Can be any device \, suffix is "i" or "o" standing for
+input and/or output.;
+#X text 33 214 input device example :;
+#X text 45 109 first inlet enable/disable device (it should be disabled
+by default.);
+#X obj 37 296 d-keys-guitar device1;
+#X text 46 70 first argument is its name and may have extra inlets
+in order to configure it (device dependant).;
+#X text 40 159 first outlet send events (in a sens of MIDI note on/off).
+A device can have other outlets to send some status.;
+#X connect 1 0 2 0;
+#X connect 1 0 2 1;
+#X connect 3 0 7 0;
+#X connect 7 0 1 0;

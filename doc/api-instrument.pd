@@ -1,0 +1,30 @@
+#N canvas 271 279 629 545 10;
+#X obj 102 335 i-example-m inst1;
+#X text 37 39 * first inlet takes events (event is any king of data
+but comply with Pd midi note format : <pitch> <velocity>. extra items
+can be used for specific instrument but not defined by API.;
+#X obj 103 378 dac~;
+#X msg 132 254 60 0;
+#X msg 102 190 60 127;
+#X text 160 190 <- classic note;
+#X text 173 254 <- note off;
+#X text 173 284 <- note off as well (poly compatibility);
+#X msg 132 284 stop;
+#X text 255 221 <- note with any other data ...;
+#X msg 132 220 58 127 12 14 15;
+#X text 32 94 * outlets are audio signal. Typically an instrument is
+mono-phonic but in some case (stereo sampler) it could output more
+channels., f 75;
+#X text 37 13 API : INSTRUMENT (i-name);
+#X text 38 437 * TODO second optional inlet for global controls (aka
+MIDI control change) ??? but maybe we want something different ...
+why not use same inlet and pipe messages beginning with MIDI ??? how
+it works with polyphony and u_makepoly !!!???? maybe it's too specific
+and use cutom map from midi CC to params ... same for midi level and
+pan to be handled by mix nodes ..., f 75;
+#X connect 0 0 2 0;
+#X connect 0 0 2 1;
+#X connect 3 0 0 0;
+#X connect 4 0 0 0;
+#X connect 8 0 0 0;
+#X connect 10 0 0 0;
