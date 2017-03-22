@@ -1,2 +1,39 @@
-#N canvas 65 81 450 300 10;
-#X obj 87 161 u-bank bank1 presets/bank1;
+#N canvas 719 180 1070 351 10;
+#X obj 789 215 u-bank presets/bank1;
+#X obj 516 201 u-storage;
+#X msg 516 30 clear;
+#X msg 528 57 dump;
+#X msg 542 86 save preset1.txt;
+#X msg 550 121 load preset1.txt;
+#X msg 516 231 --param3 128 \, --param2 64 \, --param1 32 \, --param4
+256;
+#X obj 62 164 u-store - param4;
+#X obj 218 175 c-hsl --param4 0 1;
+#X obj 218 124 c-hsl --param3 0 1;
+#X obj 218 79 c-hsl --param2 0 1;
+#X obj 217 34 c-hsl --param1 0 1;
+#X msg 789 55 set --param1 --param2;
+#X msg 765 23 set;
+#X msg 549 152 save preset2.txt;
+#X msg 545 177 load preset2.txt;
+#X obj 58 53 u-store - param1;
+#X obj 59 87 u-store - param2;
+#X obj 62 127 u-store - param3;
+#X msg 808 93 set --param3 --param4;
+#X text 575 284 TODO : merge u-storage and u-bank : save behavior with
+extra set message to filter which parameters to save. TODO : extends
+to pattern like inst* or s-* or inst1.* ...;
+#X msg 826 153 save preset2.txt;
+#X msg 816 131 save preset1.txt;
+#X connect 1 0 6 0;
+#X connect 2 0 1 0;
+#X connect 3 0 1 0;
+#X connect 4 0 1 0;
+#X connect 5 0 1 0;
+#X connect 12 0 0 0;
+#X connect 13 0 0 0;
+#X connect 14 0 1 0;
+#X connect 15 0 1 0;
+#X connect 19 0 0 0;
+#X connect 21 0 0 0;
+#X connect 22 0 0 0;

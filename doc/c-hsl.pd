@@ -1,15 +1,15 @@
-#N canvas 65 153 450 414 10;
-#X obj 105 113 hsl 128 15 40 360 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 794 1;
+#N canvas 65 161 450 414 10;
+#X obj 105 113 hsl 128 15 0 4 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 4125 1;
 #X obj 316 203 s \$1;
 #X obj 137 19 r \$1;
 #X msg 137 41 set \$1;
-#X obj 316 27 loadbang;
-#X obj 316 49 list \$2 \$3;
-#X obj 316 71 list prepend range;
-#X obj 316 93 list trim;
+#X obj 231 9 loadbang;
+#X obj 231 31 list \$2 \$3;
+#X obj 231 53 list prepend range;
+#X obj 231 75 list trim;
 #X obj 240 113 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
--262144 -1 -1 60 256;
+-262144 -1 -1 1.29921 256;
 #X connect 0 0 1 0;
 #X connect 2 0 3 0;
 #X connect 3 0 0 0;
@@ -17,6 +17,7 @@
 #X connect 4 0 5 0;
 #X connect 5 0 6 0;
 #X connect 6 0 7 0;
-#X connect 7 0 1 0;
+#X connect 7 0 0 0;
+#X connect 7 0 8 0;
 #X connect 8 0 1 0;
 #X coords 0 -1 1 1 200 32 1 100 100;
