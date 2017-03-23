@@ -15,6 +15,8 @@ project.ext {
 	pdPatches = fileTree('lib').include('**/*.pd').sort()
 }
 
+apply from: 'doc.gradle'
+
 apply plugin: 'base'
 apply plugin: 'maven-publish'
 
@@ -28,11 +30,11 @@ task patchZip(type: Zip) {
     from pdPatches
 }
 
-task patchDoc(type: Jar) {
+task patchDoc(type: Jar, dependsOn: genHtml) {
 	group = "documentation"
   	description = "Package documentation"
 	classifier = 'javadoc'
-    from files('doc')
+    from files(htmlDocDir)
 }
 
 publishing {
